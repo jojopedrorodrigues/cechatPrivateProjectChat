@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "444433530506",
+    "project_id": "cechataplicativo",
+    "storage_bucket": "cechataplicativo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444433530506:android:259d93a1ef0de9cdf3b773",
+        "android_client_info": {
+          "package_name": "com.appcechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444433530506-at4d7j0k9djjc9k9lcvjphcm6jp7cgua.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appcechat",
+            "certificate_hash": "1817885ebabfaa5d8b26117b309dd3b89e03b1e7"
+          }
+        },
+        {
+          "client_id": "444433530506-1ecct0crt93i9d35tq3hhrhlunv1cj33.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzqvYVMSBSm_x-qbmLdI6I7edJ6jardpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444433530506-1ecct0crt93i9d35tq3hhrhlunv1cj33.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,122 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Database {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  Future<void> criarChat(Map<String, dynamic> task, String uid) async {
+    String estado = task["estado"].toString();
+    String cidade = task["cidade"].toString();
+    String data = task["data"].toString();
+    await _db
+        .collection('cidades')
+        .doc(estado)
+        .collection(cidade)
+        .doc(data)
+        .collection("ids")
+        .doc(data + uid)
+        .set(task);
+  }
+
+   processo(Map<String, dynamic> task, String uid, bool verif) {
+    String estado = task["estado"].toString();
+    String cidade = task["cidade"].toString();
+    String data = task["data"].toString();
+    String quantidade;
+    String quantidade2;
+   
+    String chatUid;
+    int validador;
+    var pro = _db
+        .collection("cidades")
+        .doc(estado)
+        .collection(cidade)
+        .doc(data)
+        .collection("ids")
+        .get();
+    pro.then((value) {
+      if (value.docs.length > 0) {
+        quantidade = value.docs.elementAt(0)["uid1"].toString();
+        quantidade2 = value.docs.elementAt(0)["uid2"].toString();
+        validador = value.docs.elementAt(0)["validador"];
+        
+        if (quantidade == "null") {
+          task["uid1"] = uid;
+          criarChat(task, uid);
+          processo(task, uid, false);
+          print("value = " + quantidade);
+        } else if (quantidade2 == "null" &&
+            quantidade != "null" && verif == true) {
+          task["uid2"] = uid;
+          task["uid1"] = quantidade;
+          _db
+              .collection('cidades')
+              .doc(estado)
+              .collection(cidade)
+              .doc(data)
+              .collection("ids")
+              .doc(value.docs.elementAt(0).id)
+              .set(task);
+          processo(task, uid,true);
+        } else if (quantidade2 != "null" && quantidade != "null") {
+          if (validador == 0 && verif != true && quantidade  == uid) {
+            task["validador"] = 1;
+            quantidade = value.docs.elementAt(0)["uid1"].toString();
+            quantidade2 = value.docs.elementAt(0)["uid2"].toString();
+            task["uid2"] = quantidade2;
+            task["uid1"] = quantidade;
+            task["seta1"] = uid;
+            _db
+                .collection('cidades')
+                .doc(estado)
+                .collection(cidade)
+                .doc(data)
+                .collection("ids")
+                .doc(value.docs.elementAt(0).id)
+                .set(task);
+                
+            processo(task, uid, false);
+          } else if (validador == 1 && verif == true && quantidade != uid) {
+            quantidade = value.docs.elementAt(0)["uid1"].toString();
+            quantidade2 = value.docs.elementAt(0)["uid2"].toString();
+            task["uid2"] = quantidade2;
+            task["uid1"] = quantidade;
+            task["validador"] = 2;
+            _db
+                .collection('cidades')
+                .doc(estado)
+                .collection(cidade)
+                .doc(data)
+                .collection("ids")
+                .doc(value.docs.elementAt(0).id)
+                .set(task);
+            chatUid = quantidade + quantidade2;
+            return chatUid;
+          } else if (validador == 2 && quantidade == uid) {
+             quantidade = value.docs.elementAt(0)["uid1"].toString();
+            quantidade2 = value.docs.elementAt(0)["uid2"].toString();
+            print("valor 222 "+uid.toString());
+            _db
+                .collection('cidades')
+                .doc(estado)
+                .collection(cidade)
+                .doc(data)
+                .collection("ids")
+                .doc(value.docs.elementAt(0).id)
+                .delete();
+            chatUid = quantidade + quantidade2;
+            return chatUid;
+          }
+          else {
+          processo(task, uid, true);
+        }
+        } else {
+          processo(task, uid, true);
+        }
+      } else {
+        criarChat(task, uid);
+        processo(task, uid, true);
+      }
+    });
+   
+  }
+}
